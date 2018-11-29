@@ -55,29 +55,25 @@ export const combineURLs = function (baseURL, relativeURL) {
 };
 
 
-// /**
-//  * Transform the data for a request or a response
-//  *
-//  * @param {Object|String} data The data to be transformed
-//  * @param {Array} headers The headers for the request or response
-//  * @param {Array|Function} fns A single function or Array of functions
-//  * @returns {*} The resulting transformed data
-//  */
-// export const transformData = function(data, headers, fns) {
-//     // utils.forEach(fns, function transform(fn) {
-//     //   data = fn(data, headers);
-//     // });
-    
-//     if( typeof data !== 'object' ) {
-//         data = [data]
-//     }
 
-//     if( Array.isArray(data) ){
-        
-//     }
-
-//     return data;
-// };
+function encode(val) {
+    return encodeURIComponent(val).
+        replace(/%40/gi, '@').
+        replace(/%3A/gi, ':').
+        replace(/%24/g, '$').
+        replace(/%2C/gi, ',').
+        replace(/%20/g, '+').
+        replace(/%5B/gi, '[').
+        replace(/%5D/gi, ']');
+}
+export const buildURL = function ( url , paramsObject ){
+    if( !paramsObject || isEmptyObject(paramsObject) ) return url;
+    let parts = [];
+    Object.keys( paramsObject ).forEach(key =>{
+        parts.push( encode(key) + '=' + encode( paramsObject[key] ) );
+    });
+    return url += ( url.indexOf('?') === -1 ? '?' : '&' ) + parts.join('&');
+}
 
 
 /**
